@@ -1,13 +1,76 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --primary: #2bd17e;
+  --error: #eb5757;
+  --background: #093545;
+  --input-color: #224957;
+  --card-color: #092c39;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  background-color: var(--background);
+  font-weight: 500;
+  font-size: 20px;
+  color: white;
+}
+.body-text-large{
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 32px;
+}
+.body-text-regular{
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+}
+.body-text-small{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+}
+.body-text-extra-small{
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+}
+.body-text-caption{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+/* font-family: 'Montserrat', sans-serif;
+font-family: 'Poppins', sans-serif; */
+h1 {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 80px;
+}
+h2 {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 56px;
+}
+h3 {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 40px;
+}
+h4 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+}
+h5 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: -1.5%;
+}
+h6 {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  line-height: 24px;
 }
