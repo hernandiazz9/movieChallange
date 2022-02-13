@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 
 export const CreateEditMovieContainer = styled.div`
   display: flex;
-  height: 504px;
   align-items: center;
   justify-content: space-between;
+  height: 504px;
   margin-top: 120px;
 `;
 
@@ -14,14 +14,33 @@ export const UploadImage = styled.div`
   width: 473px;
   height: 100%;
   background-color: var(--input-color);
-  border: 2px dashed #ffffff;
+
   box-sizing: border-box;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  .fa-download {
-    font-size: 16px;
-    margin-bottom: 12px;
+  .file-uploader {
+    border: 2px dashed #ffffff;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    color: white;
+    svg {
+      display: none;
+    }
+    div {
+      display: none;
+    }
+  }
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    .fa-download {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
   }
 `;
 

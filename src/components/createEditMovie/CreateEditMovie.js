@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   createMovieAction,
   editMovieAction,
@@ -14,8 +15,11 @@ import {
   InputText,
   UploadImage,
 } from "./createEditMovieStyle";
+import Error from "../errorComponent/Error";
 import Spinner from "../Spinner";
-import { useSelector } from "react-redux";
+import { FileUploader } from "react-drag-drop-files";
+
+const fileTypes = ["JPG", "JPEG", "PNG", "WEBP"];
 
 const CreateEditMovie = ({ create, movie }) => {
   const dispatch = useDispatch();
@@ -25,17 +29,21 @@ const CreateEditMovie = ({ create, movie }) => {
   const [year, setYear] = useState("");
   const [errorTitle, setErrorTitle] = useState(null);
   const [errorYear, setErrorYear] = useState(null);
+  const [errorIMG, setErrorIMG] = useState(null);
   const [createMSG, setCreateMSG] = useState(null);
+  const [file, setFile] = useState(null);
+  const [dropMessage, setDropMessage] = useState("Drop an image here");
 
   const handlesubmit = (e) => {
     e.preventDefault();
     if (title.length === 0) return setErrorTitle("Must have a title");
     if (year.length === 0) return setErrorYear("Must have a year");
+    if (!file) return setErrorIMG("Must have an image");
     if (create) {
-      dispatch(createMovieAction(title, year));
+      dispatch(createMovieAction(title, year, file));
       setCreateMSG(`Movie ${title} was created`);
     } else {
-      dispatch(editMovieAction(title, year, movie.id));
+      dispatch(editMovieAction(title, year, movie.id, file));
       navigate("/");
     }
     setYear("");
@@ -50,8 +58,10 @@ const CreateEditMovie = ({ create, movie }) => {
     if (movie && Object.keys(movie).length > 0) {
       setTitle(movie.attributes.name);
       setYear(movie.attributes.publicationYear);
+      setFile(movie.poster);
       setCreateMSG(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movie]);
 
   useEffect(() => {
@@ -59,16 +69,38 @@ const CreateEditMovie = ({ create, movie }) => {
       setTimeout(() => {
         setErrorTitle(null);
         setErrorYear(null);
+        setErrorIMG(null);
         setCreateMSG(null);
       }, 3000);
     }
   }, [errorTitle, errorYear, createMSG]);
 
+  const handleDragStart = (file) => {
+    setDropMessage("Files is here");
+    setFile(file);
+    console.log(file);
+  };
+
   return (
     <CreateEditMovieContainer height={67}>
       <UploadImage>
-        <i className="fas fa-download"></i>
-        <span className="body-text-small">Drop an image here</span>
+        <FileUploader
+          classes="file-uploader"
+          handleChange={handleDragStart}
+          name="file"
+          types={fileTypes}
+        />
+        <div>
+          <i className="fas fa-download"></i>
+          <span className="body-text-small">{dropMessage}</span>
+          {!create && movie && (
+            <img
+              style={{ width: "150px", heigth: "200px" }}
+              src={movie.poster}
+              alt={movie.title}
+            />
+          )}
+        </div>
       </UploadImage>
 
       <FormMovieData onSubmit={handlesubmit}>
@@ -81,7 +113,7 @@ const CreateEditMovie = ({ create, movie }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <span>{errorTitle}</span>
+          {errorTitle && <Error msg={errorTitle} />}
           <InputText
             className="body-text-small"
             size={25}
@@ -90,7 +122,7 @@ const CreateEditMovie = ({ create, movie }) => {
             value={year}
             onChange={(e) => setYear(e.target.value)}
           />
-          <span>{errorYear}</span>
+          {errorYear && <Error msg={errorYear} />}
         </ContainerInputs>
         <div>
           <Button
@@ -105,9 +137,14 @@ const CreateEditMovie = ({ create, movie }) => {
             {create ? "Submit" : "Update"}
           </Button>
         </div>
+        {errorIMG && (
+          <div>
+            <Error msg={errorIMG} />
+          </div>
+        )}
         {createMSG && <CreateMSG>{createMSG}</CreateMSG>}
 
-        {(createLoading || editLoading )&&(
+        {(createLoading || editLoading) && (
           <div style={{ paddingRight: "160px", marginTop: "60px" }}>
             <Spinner />
           </div>

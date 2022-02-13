@@ -1,5 +1,12 @@
 import { axiosMovies } from "../../config/axiosClient";
-import axios from "axios";
+
+import { storage } from "../../firebase";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import {
   GET_MOVIE,
   GET_MOVIE_OKEY,
@@ -16,43 +23,74 @@ import {
   DELETE_MOVIE,
   DELETE_MOVIE_OKEY,
   DELETE_MOVIE_ERROR,
+  UPLOAD_PIC,
 } from "../types";
 
 export const getMoviesAction = () => {
   return async (dispatch) => {
     dispatch({ type: GET_MOVIE });
-    await axiosMovies
-      .get("/")
-      .then((rta) => {
-        console.log(rta.data);
-        dispatch({
-          type: GET_MOVIE_OKEY,
-          payload: rta.data.data,
-        });
-      })
-      .catch((e) => {
-        console.log(e.response);
-        dispatch({
-          type: GET_MOVIE_ERROR,
-          payload: e.response.data.error.message,
-        });
+    try {
+      const moviesResponse = await axiosMovies.get("/");
+      dispatch({
+        type: GET_MOVIE_OKEY,
+        payload: moviesResponse.data.data,
       });
+      moviesResponse.data.data.forEach((movieResponse) => {
+        console.log(movieResponse);
+        let title = movieResponse.attributes.name;
+        const fileRef = ref(storage, `documents/${title}`);
+        getDownloadURL(fileRef).then((urlImg) =>
+          dispatch({
+            type: UPLOAD_PIC,
+            payload: {
+              urlImg,
+              title,
+            },
+          })
+        );
+      });
+    } catch (e) {
+      console.log(e.response.data.error);
+      dispatch({
+        type: GET_MOVIE_ERROR,
+        payload: e.response.data.error.message,
+      });
+    }
   };
 };
-export const createMovieAction = (title, year) => {
+
+export const createMovieAction = (title, year, file) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_MOVIE });
     const bodyFormData = new FormData();
     const movieData = `{"name": "${title}", "publicationYear": ${year}}`;
     bodyFormData.append("data", movieData);
 
+    let urlPic;
+    if (file) {
+      const fileRef = ref(storage, `documents/${title}`);
+      await uploadBytes(fileRef, file);
+      urlPic = await getDownloadURL(fileRef);
+    }
+    // try {
+    //   const rta = axiosMovies.get('/', bodyFormData)
+
+    // } catch (error) {
+
+    // }
+
     await axiosMovies
       .post("/", bodyFormData)
       .then((rta) => {
-        console.log(rta.data);
+        console.log(rta.data.data);
+        const movie = {
+          id: rta.data.data.id,
+          attributes: rta.data.data.attributes,
+          poster: urlPic,
+        };
         dispatch({
           type: CREATE_MOVIE_OKEY,
-          payload: rta.data.data,
+          payload: movie,
         });
       })
       .catch((e) => {
@@ -70,10 +108,20 @@ export const getMovieById = (id) => {
     await axiosMovies
       .get(`/${id}`)
       .then((rta) => {
-        console.log(rta.data.data);
-        dispatch({
-          type: GET_MOVIE_BY_ID_OKEY,
-          payload: rta.data.data,
+        let title = rta.data.data.attributes.name;
+
+        const fileRef = ref(storage, `documents/${title}`);
+        getDownloadURL(fileRef).then((url) => {
+          const movie = {
+            id: rta.data.data.id,
+            attributes: rta.data.data.attributes,
+            poster: url,
+          };
+          console.log(movie, "///");
+          dispatch({
+            type: GET_MOVIE_BY_ID_OKEY,
+            payload: movie,
+          });
         });
       })
       .catch((e) => {
@@ -91,20 +139,31 @@ export const setMovieById = (id) => ({
   payload: id,
 });
 
-export const editMovieAction = (title, year, id) => {
+export const editMovieAction = (title, year, id, file) => {
   return async (dispatch) => {
     dispatch({ type: EDIT_MOVIE });
     const bodyFormData = new FormData();
     const movieData = `{"name": "${title}", "publicationYear": ${year}}`;
     bodyFormData.append("data", movieData);
+    let urlPic;
+    if (file) {
+      const fileRef = ref(storage, `documents/${title}`);
+      await uploadBytes(fileRef, file);
+      urlPic = await getDownloadURL(fileRef);
+    }
 
     await axiosMovies
       .put(`/${id}`, bodyFormData)
       .then((rta) => {
         console.log(rta.data.data);
+        const movie = {
+          id: rta.data.data.id,
+          attributes: rta.data.data.attributes,
+          poster: urlPic,
+        };
         dispatch({
           type: EDIT_MOVIE_OKEY,
-          payload: rta.data.data,
+          payload: movie,
         });
       })
       .catch((e) => {
@@ -121,11 +180,14 @@ export const deleteMovieAction = (id) => {
     await axiosMovies
       .delete(`/${id}`)
       .then((rta) => {
-        console.log(rta.data.data);
-        dispatch({
-          type: DELETE_MOVIE_OKEY,
-          payload: id,
-        });
+        let title = rta.data.data.attributes.name;
+        const fileRef = ref(storage, `documents/${title}`);
+        deleteObject(fileRef).then(() =>
+          dispatch({
+            type: DELETE_MOVIE_OKEY,
+            payload: id,
+          })
+        );
       })
       .catch((e) => {
         console.log(e.response);

@@ -28,3 +28,6 @@ export const SET_MOVIE_BY_ID = "SET_MOVIE_BY_ID";
 export const DELETE_MOVIE = "DELETE_MOVIE";
 export const DELETE_MOVIE_OKEY = "DELETE_MOVIE_OKEY";
 export const DELETE_MOVIE_ERROR = "DELETE_MOVIE_ERROR";
+
+
+export const UPLOAD_PIC = "UPLOAD_PIC"

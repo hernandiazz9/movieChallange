@@ -12,6 +12,7 @@ import {
   GET_MOVIE_ERROR,
   GET_MOVIE_OKEY,
   SET_MOVIE_BY_ID,
+  UPLOAD_PIC,
 } from "../types";
 
 const inicialState = {
@@ -68,6 +69,7 @@ const loginReducer = (state = inicialState, action) => {
               movie.attributes.name = action.payload.attributes.name;
               movie.attributes.publicationYear =
                 action.payload.attributes.publicationYear;
+                movie.poster= action.payload.poster
             }
             return movie;
           }),
@@ -85,6 +87,15 @@ const loginReducer = (state = inicialState, action) => {
           ),
         ],
       };
+
+    case UPLOAD_PIC:
+      return { ...state, movies: state.movies.map(movie=>{
+        if(movie.attributes.name===action.payload.title){
+          movie.poster = action.payload.urlImg
+        }
+        return movie
+      }) }  
+    
     default:
       return state;
   }

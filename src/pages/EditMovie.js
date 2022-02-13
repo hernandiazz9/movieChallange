@@ -29,7 +29,6 @@ const EditMovie = () => {
       tokenAuth(jwt);
       dispatch(getUserAction());
       dispatch(getMoviesAction());
-
       dispatch(getMovieById(params.id));
     } else {
       dispatch(setMovieById(params.id));
