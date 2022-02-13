@@ -20,7 +20,6 @@ import {
   EDIT_MOVIE,
   EDIT_MOVIE_OKEY,
   EDIT_MOVIE_ERROR,
-  DELETE_MOVIE,
   DELETE_MOVIE_OKEY,
   DELETE_MOVIE_ERROR,
   UPLOAD_PIC,
@@ -36,7 +35,6 @@ export const getMoviesAction = () => {
         payload: moviesResponse.data.data,
       });
       moviesResponse.data.data.forEach((movieResponse) => {
-        console.log(movieResponse);
         let title = movieResponse.attributes.name;
         const fileRef = ref(storage, `documents/${title}`);
         getDownloadURL(fileRef).then((urlImg) =>
@@ -50,7 +48,6 @@ export const getMoviesAction = () => {
         );
       });
     } catch (e) {
-      console.log(e.response.data.error);
       dispatch({
         type: GET_MOVIE_ERROR,
         payload: e.response.data.error.message,
@@ -72,17 +69,10 @@ export const createMovieAction = (title, year, file) => {
       await uploadBytes(fileRef, file);
       urlPic = await getDownloadURL(fileRef);
     }
-    // try {
-    //   const rta = axiosMovies.get('/', bodyFormData)
-
-    // } catch (error) {
-
-    // }
 
     await axiosMovies
       .post("/", bodyFormData)
       .then((rta) => {
-        console.log(rta.data.data);
         const movie = {
           id: rta.data.data.id,
           attributes: rta.data.data.attributes,
@@ -94,7 +84,6 @@ export const createMovieAction = (title, year, file) => {
         });
       })
       .catch((e) => {
-        console.log(e.response);
         dispatch({
           type: CREATE_MOVIE_ERROR,
           payload: e.response.data.error.message,
@@ -117,7 +106,6 @@ export const getMovieById = (id) => {
             attributes: rta.data.data.attributes,
             poster: url,
           };
-          console.log(movie, "///");
           dispatch({
             type: GET_MOVIE_BY_ID_OKEY,
             payload: movie,
@@ -125,7 +113,6 @@ export const getMovieById = (id) => {
         });
       })
       .catch((e) => {
-        console.log(e.response);
         dispatch({
           type: GET_MOVIE_BY_ID_ERROR,
           payload: e.response.data.error.message,
@@ -155,7 +142,6 @@ export const editMovieAction = (title, year, id, file) => {
     await axiosMovies
       .put(`/${id}`, bodyFormData)
       .then((rta) => {
-        console.log(rta.data.data);
         const movie = {
           id: rta.data.data.id,
           attributes: rta.data.data.attributes,
@@ -167,7 +153,6 @@ export const editMovieAction = (title, year, id, file) => {
         });
       })
       .catch((e) => {
-        console.log(e.response);
         dispatch({
           type: EDIT_MOVIE_ERROR,
           payload: e.response.data.error.message,
@@ -190,7 +175,6 @@ export const deleteMovieAction = (id) => {
         );
       })
       .catch((e) => {
-        console.log(e.response);
         dispatch({
           type: DELETE_MOVIE_ERROR,
           payload: e.response.data.error.message,

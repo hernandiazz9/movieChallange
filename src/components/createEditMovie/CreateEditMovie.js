@@ -42,12 +42,15 @@ const CreateEditMovie = ({ create, movie }) => {
     if (create) {
       dispatch(createMovieAction(title, year, file));
       setCreateMSG(`Movie ${title} was created`);
+
+      navigate("/");
     } else {
       dispatch(editMovieAction(title, year, movie.id, file));
       navigate("/");
     }
     setYear("");
     setTitle("");
+    setFile(null)
   };
   const handleCancel = () => {
     navigate("/");
@@ -78,7 +81,6 @@ const CreateEditMovie = ({ create, movie }) => {
   const handleDragStart = (file) => {
     setDropMessage("Files is here");
     setFile(file);
-    console.log(file);
   };
 
   return (
