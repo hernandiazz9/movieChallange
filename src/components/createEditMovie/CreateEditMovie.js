@@ -43,7 +43,6 @@ const CreateEditMovie = ({ create, movie }) => {
       dispatch(createMovieAction(title, year, file));
       setCreateMSG(`Movie ${title} was created`);
 
-      navigate("/");
     } else {
       dispatch(editMovieAction(title, year, movie.id, file));
       navigate("/");
@@ -73,7 +72,12 @@ const CreateEditMovie = ({ create, movie }) => {
         setErrorTitle(null);
         setErrorYear(null);
         setErrorIMG(null);
-        setCreateMSG(null);
+        if(createMSG){
+          setCreateMSG(null);
+          navigate("/");
+
+        }
+
       }, 3000);
     }
   }, [errorTitle, errorYear, createMSG]);
