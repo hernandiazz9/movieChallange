@@ -6,10 +6,10 @@ export const MovieContainer = styled.div`
   display: grid;
   column-gap: 32px;
   row-gap: 32px;
-  grid-template-columns: repeat(1fr);
-  @media (min-width: 650px) {
+  grid-template-columns: repeat(4, 1fr);
+  @media (max-width: 850px) {
     margin-top: 120px;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
 `;
 export const CardStyle = styled.div`
@@ -22,7 +22,7 @@ export const CardStyle = styled.div`
   margin: 0 auto;
   height: 504px;
   width: 282px;
-  /* height: 100%; */
+  height: 100%;
   padding: 8px;
   text-decoration: none;
   a {

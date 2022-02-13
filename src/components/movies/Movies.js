@@ -7,14 +7,12 @@ import {
   ImgMovie,
   MovieContainer,
 } from "./moviesStyles";
-import pic1 from "../../assets/pic1.png";
 import { useDispatch } from "react-redux";
 import { deleteMovieAction } from "../../redux/actions/MovieAction";
 import Spinner from "../Spinner";
 
 const Movies = ({ movies }) => {
   const dispatch = useDispatch();
-  // console.log(movies[0].poster);
 
   return (
     <>

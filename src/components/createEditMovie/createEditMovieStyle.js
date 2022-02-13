@@ -6,6 +6,12 @@ export const CreateEditMovieContainer = styled.div`
   justify-content: space-between;
   height: 504px;
   margin-top: 120px;
+  @media (max-width: 850px) {
+    flex-direction: column;
+    margin-top: 32px;
+
+    
+  }
 `;
 
 export const UploadImage = styled.div`
@@ -14,7 +20,6 @@ export const UploadImage = styled.div`
   width: 473px;
   height: 100%;
   background-color: var(--input-color);
-
   box-sizing: border-box;
   border-radius: 10px;
   justify-content: center;
@@ -41,6 +46,10 @@ export const UploadImage = styled.div`
       font-size: 16px;
       margin-bottom: 12px;
     }
+  }
+  @media (max-width: 850px) {
+    margin-bottom: 32px;
+
   }
 `;
 
