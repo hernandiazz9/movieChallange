@@ -31,7 +31,7 @@ const Movies = ({ movies }) => {
             <Link to={`/edit-movie/${movie.id}`}>
               <ImgMovie>
                 {!movie.poster && <Spinner />}
-                <img src={movie.poster} alt="pic1" />
+                <img src={movie.poster} alt={movie.attributes.name} />
               </ImgMovie>
 
               <DataMovie>
