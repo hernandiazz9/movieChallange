@@ -133,11 +133,11 @@ export const editMovieAction = (title, year, id, file) => {
     const movieData = `{"name": "${title}", "publicationYear": ${year}}`;
     bodyFormData.append("data", movieData);
     let urlPic;
-    if (file) {
+    if (typeof file !== "string") {
       const fileRef = ref(storage, `documents/${title}`);
       await uploadBytes(fileRef, file);
       urlPic = await getDownloadURL(fileRef);
-    }
+    } else urlPic = file;
 
     await axiosMovies
       .put(`/${id}`, bodyFormData)
