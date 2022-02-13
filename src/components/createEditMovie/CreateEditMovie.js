@@ -75,11 +75,11 @@ const CreateEditMovie = ({ create, movie }) => {
         if(createMSG){
           setCreateMSG(null);
           navigate("/");
-
         }
 
       }, 3000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorTitle, errorYear, createMSG]);
 
   const handleDragStart = (file) => {
